@@ -1,151 +1,180 @@
 <!DOCTYPE html>
-<!-- Minimalized PDF.js viewer (toolbar/sidebar disembunyikan; download link tersedia) -->
-<html dir="ltr" mozdisallowselectionprint>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="google" content="notranslate">
-    <title>PDF.js viewer (no toolbar)</title>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PDF.js Canvas Viewer (No Toolbar)</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #333;
+    color: #eee;
+    user-select: none;
+  }
+  #message {
+    padding: 1em;
+    text-align: center;
+    font-size: 1.2em;
+    margin-top: 2em;
+  }
+  #pdf-container {
+    width: 100%;
+    max-width: 900px;
+    margin: 1em auto;
+    background: #444;
+    box-shadow: 0 0 10px #000;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  canvas {
+    display: block;
+    margin: 1em auto;
+    box-shadow: 0 0 5px #000;
+    border: 1px solid #666;
+    user-select: none;
+  }
+  #cors-warning {
+    margin: 1em auto;
+    max-width: 900px;
+    background: #a33;
+    color: #fff;
+    padding: 1em;
+    border-radius: 5px;
+    font-size: 0.9em;
+  }
+</style>
+</head>
+<body>
+<div id="message">Loading PDF viewer...</div>
+<div id="cors-warning" style="display:none;">
+  <strong>CORS Error:</strong> Failed to fetch the PDF file.<br />
+  Please ensure the server hosting the PDF allows cross-origin requests by sending the header:<br />
+  <code>Access-Control-Allow-Origin: *</code><br />
+  or your domain.<br />
+  If you control the server, please configure CORS properly.<br />
+  Otherwise, try hosting the PDF on a server with CORS enabled.
+</div>
+<div id="pdf-container" style="display:none;"></div>
 
-    <!-- resource for localization (kept) -->
-    <link rel="resource" type="application/l10n" href="locale/locale.json">
-    <script src="../build/pdf.mjs" type="module"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.6.172/pdf.min.js"></script>
+<script>
+  // Configure PDF.js workerSrc
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.6.172/pdf.worker.min.js';
 
-    <!-- gunakan stylesheet asli atau minimal -->
-    <link rel="stylesheet" href="viewer.css">
+  // Utility: get query param 'file'
+  function getQueryParam(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+  }
 
-    <script src="viewer.mjs" type="module"></script>
+  // Disable right-click context menu on whole document
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+  });
 
-    <style>
-      /* Sembunyikan toolbar dan sidebar seluruhnya */
-      #sidebarContainer, .toolbar, #toolbarSidebar, #sidebarResizer, #toolbarContainer {
-        display: none !important;
+  // Disable text selection on body
+  document.body.style.userSelect = 'none';
+
+  // Block common keyboard shortcuts for save/print
+  document.addEventListener('keydown', function(e) {
+    // Ctrl/Cmd + S or P or Shift+S or U
+    if (
+      (e.ctrlKey || e.metaKey) &&
+      (e.key === 's' || e.key === 'S' || e.key === 'p' || e.key === 'P' || e.key === 'u' || e.key === 'U')
+    ) {
+      e.preventDefault();
+      alert('Save, Print, and View Source shortcuts are disabled.');
+    }
+  });
+
+  // Override window.print to disable printing
+  window.print = function() {
+    alert('Printing is disabled.');
+  };
+
+  // Prevent beforeprint event
+  window.addEventListener('beforeprint', function(e) {
+    e.preventDefault();
+    alert('Printing is disabled.');
+  });
+
+  const pdfUrl = getQueryParam('file');
+  const messageEl = document.getElementById('message');
+  const container = document.getElementById('pdf-container');
+  const corsWarning = document.getElementById('cors-warning');
+
+  if (!pdfUrl) {
+    messageEl.textContent = 'No PDF file specified. Please provide a PDF URL in the "file" query parameter.';
+  } else {
+    messageEl.textContent = 'Loading PDF...';
+
+    // Fetch PDF as ArrayBuffer
+    fetch(pdfUrl, {
+      // mode: 'cors', // uncomment if needed
+      // credentials: 'include' // uncomment if needed
+    }).then(function(response) {
+      if (!response.ok) {
+        throw new Error('Network response was not ok: ' + response.statusText);
       }
+      return response.arrayBuffer();
+    }).then(function(data) {
+      messageEl.style.display = 'none';
+      container.style.display = 'block';
 
-      /* Atur tampilan kontainer utama supaya memenuhi layar */
-      #mainContainer { width: 100% !important; margin: 0; padding: 0; }
-      #viewerContainer, #viewer { margin: 0; padding: 0; }
+      // Load PDF document from data
+      const loadingTask = pdfjsLib.getDocument({data: data});
+      loadingTask.promise.then(function(pdf) {
+        // Render all pages
+        const numPages = pdf.numPages;
 
-      /* Tombol download yang simpel (kanan atas) */
-      #downloadWrapper {
-        position: fixed;
-        top: 12px;
-        right: 12px;
-        z-index: 9999;
-        background: rgba(0,0,0,0.6);
-        color: #fff;
-        padding: 8px 12px;
-        border-radius: 6px;
-        font-family: sans-serif;
-        font-size: 14px;
-      }
-      #downloadWrapper a {
-        color: #fff;
-        text-decoration: none;
-      }
-      #downloadWrapper button {
-        background: #1a73e8;
-        border: none;
-        color: white;
-        padding: 6px 10px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 14px;
-      }
+        // Render pages sequentially to avoid blocking UI
+        let pageNum = 1;
 
-      /* Opsional: sembunyikan elemen lain yang tidak terpakai */
-      .hidden, .visuallyHidden { display: none !important; }
-    </style>
-  </head>
+        function renderPage(num) {
+          pdf.getPage(num).then(function(page) {
+            const viewport = page.getViewport({scale: 1.5});
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            canvas.style.userSelect = 'none';
+            canvas.style.webkitUserSelect = 'none';
+            canvas.style.MozUserSelect = 'none';
+            canvas.style.msUserSelect = 'none';
 
-  <body tabindex="0">
-    <div id="outerContainer">
-      <span id="viewer-alert" class="visuallyHidden" role="alert"></span>
+            // Disable right-click on canvas
+            canvas.addEventListener('contextmenu', function(e) {
+              e.preventDefault();
+            });
 
-      <!-- sidebarContainer dan isinya disembunyikan via CSS -->
-      <div id="sidebarContainer">
-        <div id="toolbarSidebar" class="toolbarHorizontalGroup">
-          <!-- isi asli disembunyikan -->
-        </div>
-        <div id="sidebarContent"></div>
-        <div id="sidebarResizer"></div>
-      </div>
+            container.appendChild(canvas);
 
-      <div id="mainContainer">
-        <!-- toolbar asli dihapus/di-hide -->
-        <div class="toolbar" style="display:none">
-          <div id="toolbarContainer" style="display:none">
-            <div id="toolbarViewer" class="toolbarHorizontalGroup"></div>
-          </div>
-        </div>
-
-        <!-- PDF viewer utama (biarkan struktur PDF.js agar tetap bekerja) -->
-        <div id="viewerContainer" tabindex="0">
-          <div id="viewer" class="pdfViewer"></div>
-        </div>
-      </div> <!-- mainContainer -->
-    </div> <!-- outerContainer -->
-
-    <!-- Wrapper tombol download / copy link -->
-    <div id="downloadWrapper" role="region" aria-label="download PDF">
-      <span id="downloadText">File:</span>
-      <a id="downloadLink" href="#" download><button id="downloadBtn">Download PDF</button></a>
-    </div>
-
-    <script>
-      // Helper: ambil parameter query 'file'
-      function getQueryFile() {
-        const params = new URLSearchParams(location.search);
-        const f = params.get('file');
-        if (f && f.trim()) {
-          return f;
-        }
-        // kalau tidak ada, coba atribut data-file pada body atau berikan file default
-        return null;
-      }
-
-      // Atur link download supaya menunjuk ke file yang sama
-      (function setupDownloadLink() {
-        const file = getQueryFile();
-        const downloadLink = document.getElementById('downloadLink');
-        const downloadText = document.getElementById('downloadText');
-
-        if (file) {
-          // jika file adalah URL relatif/absolute, isi href langsung
-          downloadLink.href = file;
-          downloadLink.setAttribute('download', '');
-          downloadText.textContent = 'File: ' + file;
-        } else {
-          // Tidak ada parameter file: coba cari dokumen yang sedang dimuat oleh PDF.js
-          // PDF.js biasanya menginisialisasi beberapa objek; kita coba deteksi url dari PDFViewerApplication
-          if (window.PDFViewerApplication && window.PDFViewerApplication.url) {
-            const url = window.PDFViewerApplication.url;
-            downloadLink.href = url;
-            downloadLink.setAttribute('download', '');
-            downloadText.textContent = 'File: ' + url;
-          } else {
-            // fallback: nonaktifkan tombol dan tampilkan petunjuk
-            downloadLink.removeAttribute('href');
-            downloadLink.removeAttribute('download');
-            document.getElementById('downloadBtn').textContent = 'Tidak ada file';
-            downloadText.textContent = 'Tidak ada file terdeteksi';
-          }
-        }
-      })();
-
-      // Jika Anda ingin juga menyalin link file ke clipboard
-      document.getElementById('downloadBtn').addEventListener('contextmenu', function (e) {
-        // klik kanan pada tombol akan menyalin URL ke clipboard (jika ada)
-        e.preventDefault();
-        const link = document.getElementById('downloadLink').href;
-        if (link) {
-          navigator.clipboard?.writeText(link).then(function () {
-            alert('Link tersalin ke clipboard:\n' + link);
-          }, function () {
-            alert('Gagal menyalin link ke clipboard.');
+            const renderContext = {
+              canvasContext: context,
+              viewport: viewport
+            };
+            const renderTask = page.render(renderContext);
+            renderTask.promise.then(function() {
+              pageNum++;
+              if (pageNum <= numPages) {
+                renderPage(pageNum);
+              }
+            });
           });
         }
+
+        renderPage(pageNum);
+      }, function(reason) {
+        messageEl.style.display = 'block';
+        messageEl.textContent = 'Error loading PDF: ' + reason.message;
       });
-    </script>
-  </body>
+    }).catch(function(error) {
+      messageEl.style.display = 'none';
+      corsWarning.style.display = 'block';
+      console.error('Fetch error:', error);
+    });
+  }
+</script>
+</body>
 </html>
