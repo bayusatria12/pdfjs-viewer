@@ -5,7 +5,6 @@
   <title>PDF Viewer</title>
   <link rel="stylesheet" href="viewer.css">
   <script src="pdf.js"></script>
-  <script src="viewer.js"></script>
 </head>
 <body>
   <!-- Judul PDF -->
@@ -13,9 +12,9 @@
 
   <!-- Toolbar disembunyikan -->
   <div id="toolbarViewer" class="toolbarHorizontalGroup" style="display:none;">
-      <div id="toolbarViewerLeft" class="toolbarHorizontalGroup"></div>
-      <div id="toolbarViewerMiddle" class="toolbarHorizontalGroup"></div>
-      <div id="toolbarViewerRight" class="toolbarHorizontalGroup"></div>
+    <div id="toolbarViewerLeft" class="toolbarHorizontalGroup"></div>
+    <div id="toolbarViewerMiddle" class="toolbarHorizontalGroup"></div>
+    <div id="toolbarViewerRight" class="toolbarHorizontalGroup"></div>
   </div>
 
   <!-- Container PDF -->
@@ -23,9 +22,10 @@
     <div id="viewer" class="pdfViewer"></div>
   </div>
 
+  <script src="pdf.worker.js"></script>
   <script>
     const urlParams = new URLSearchParams(window.location.search);
-    const pdfFile = urlParams.get('file') || 'default.pdf'; // default jika tidak ada parameter
+    const pdfFile = urlParams.get('file') || 'default.pdf';
     document.getElementById('pdfTitle').textContent = pdfFile;
 
     const pdfjsLib = window['pdfjs-dist/build/pdf'];
@@ -49,6 +49,9 @@
           });
         });
       }
+    }).catch(err => {
+      document.getElementById('pdfTitle').textContent = "PDF tidak ditemukan!";
+      console.error(err);
     });
   </script>
 </body>
