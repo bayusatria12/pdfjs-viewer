@@ -3,25 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <title>PDF Viewer</title>
-  <link rel="stylesheet" href="viewer.css">
-  <script src="pdf.js"></script>
+  <style>
+    body { margin:0; font-family: Arial, sans-serif; }
+    #pdfTitle { text-align:center; font-weight:bold; margin:10px 0; }
+    #viewerContainer { width:100%; height:90vh; overflow:auto; text-align:center; }
+    canvas { margin: 10px auto; display:block; border:1px solid #ccc; }
+  </style>
 </head>
 <body>
-  <!-- Judul PDF -->
-  <div id="pdfTitle" style="text-align:center; font-weight:bold; margin:10px 0;"></div>
 
-  <!-- Toolbar disembunyikan -->
-  <div id="toolbarViewer" class="toolbarHorizontalGroup" style="display:none;">
-    <div id="toolbarViewerLeft" class="toolbarHorizontalGroup"></div>
-    <div id="toolbarViewerMiddle" class="toolbarHorizontalGroup"></div>
-    <div id="toolbarViewerRight" class="toolbarHorizontalGroup"></div>
-  </div>
+  <!-- Judul PDF -->
+  <div id="pdfTitle"></div>
 
   <!-- Container PDF -->
-  <div id="viewerContainer" class="pdfViewerContainer">
-    <div id="viewer" class="pdfViewer"></div>
+  <div id="viewerContainer">
+    <div id="viewer"></div>
   </div>
 
+  <script src="pdf.js"></script>
   <script src="pdf.worker.js"></script>
   <script>
     const urlParams = new URLSearchParams(window.location.search);
