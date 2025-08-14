@@ -21,8 +21,8 @@
   </div>
 
   <script src="pdf.js"></script>
-  <script src="pdf.worker.js"></script>
   <script>
+    // Ambil nama PDF dari query string
     const urlParams = new URLSearchParams(window.location.search);
     const pdfFile = urlParams.get('file') || 'default.pdf';
     document.getElementById('pdfTitle').textContent = pdfFile;
@@ -30,7 +30,10 @@
     const pdfjsLib = window['pdfjs-dist/build/pdf'];
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdf.worker.js';
 
-    pdfjsLib.getDocument('../pdf/' + pdfFile).promise.then(pdf => {
+    // URL lengkap ke file PDF di GitHub Pages
+    const pdfUrl = 'https://bayusatria12.github.io/pdfjs-viewer/pdf/' + encodeURIComponent(pdfFile);
+
+    pdfjsLib.getDocument(pdfUrl).promise.then(pdf => {
       const viewer = document.getElementById('viewer');
       for (let i = 1; i <= pdf.numPages; i++) {
         pdf.getPage(i).then(page => {
