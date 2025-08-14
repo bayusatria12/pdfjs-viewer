@@ -22,7 +22,6 @@
 
   <script src="pdf.js"></script>
   <script>
-    // Ambil nama PDF dari query string
     const urlParams = new URLSearchParams(window.location.search);
     const pdfFile = urlParams.get('file') || 'default.pdf';
     document.getElementById('pdfTitle').textContent = pdfFile;
@@ -30,7 +29,7 @@
     const pdfjsLib = window['pdfjs-dist/build/pdf'];
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdf.worker.js';
 
-    // Path relatif ke folder pdf/ di repo
+    // Path relatif dari viewer.html ke folder pdf/
     const pdfUrl = '../pdf/' + pdfFile;
 
     pdfjsLib.getDocument(pdfUrl).promise.then(pdf => {
