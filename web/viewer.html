@@ -1,36 +1,36 @@
-<canvas id="pdf-viewer" style="width:100%; height:600px;"></canvas>
+<!-- Container PDF, cukup isi data-pdf dengan URL GitHub raw PDF -->
+<div id="pdf-container" data-pdf=""></div>
 
+<!-- Canvas untuk menampilkan semua halaman PDF -->
+<div id="pdf-viewer" style="width:100%; height:auto;"></div>
+
+<!-- PDF.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.111/pdf.min.js"></script>
+
 <script>
-  const url = 'https://raw.githubusercontent.com/username/repo/main/folder/Pharmacovigilance.pdf';
+  const container = document.getElementById('pdf-container');
+  const url = container ? container.getAttribute('data-pdf') : null;
+  if(!url){
+    console.error('PDF URL tidak ditemukan! Silakan isi data-pdf.');
+  }
 
   const pdfjsLib = window['pdfjs-dist/build/pdf'];
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.111/pdf.worker.min.js';
 
-  let pdfDoc = null;
-  let pageNum = 1;
-  const canvas = document.getElementById('pdf-viewer');
-  const ctx = canvas.getContext('2d');
-
-  function renderPage(num) {
-    pdfDoc.getPage(num).then(page => {
-      const viewport = page.getViewport({ scale: 1.2 });
-      canvas.height = viewport.height;
-      canvas.width = viewport.width;
-
-      const renderContext = { canvasContext: ctx, viewport: viewport };
-      page.render(renderContext);
-    });
-  }
+  const viewer = document.getElementById('pdf-viewer');
 
   pdfjsLib.getDocument(url).promise.then(pdf => {
-    pdfDoc = pdf;
-    renderPage(pageNum);
-  });
-
-  // Navigasi halaman (opsional)
-  document.addEventListener('keydown', e => {
-    if(e.key === 'ArrowRight' && pageNum < pdfDoc.numPages){ pageNum++; renderPage(pageNum); }
-    if(e.key === 'ArrowLeft' && pageNum > 1){ pageNum--; renderPage(pageNum); }
+    for(let pageNum = 1; pageNum <= pdf.numPages; pageNum++){
+      pdf.getPage(pageNum).then(page => {
+        const viewport = page.getViewport({ scale: 1.2 });
+        const canvas = document.createElement('canvas');
+        canvas.style.display = 'block';
+        canvas.style.margin = '10px auto';
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        viewer.appendChild(canvas);
+        page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport });
+      });
+    }
   });
 </script>
