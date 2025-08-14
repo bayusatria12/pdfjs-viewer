@@ -30,8 +30,8 @@
     const pdfjsLib = window['pdfjs-dist/build/pdf'];
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdf.worker.js';
 
-    // URL lengkap ke file PDF di GitHub Pages
-    const pdfUrl = 'https://bayusatria12.github.io/pdfjs-viewer/pdf/' + encodeURIComponent(pdfFile);
+    // Path relatif ke folder pdf/ di repo
+    const pdfUrl = '../pdf/' + pdfFile;
 
     pdfjsLib.getDocument(pdfUrl).promise.then(pdf => {
       const viewer = document.getElementById('viewer');
