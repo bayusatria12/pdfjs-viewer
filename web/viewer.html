@@ -1,53 +1,55 @@
 <!DOCTYPE html>
-<html dir="ltr" mozdisallowselectionprint>
-  <head>
-    <meta charset="UTF-8">
-    <title>PDF Viewer</title>
-    <link rel="stylesheet" href="viewer.css">
-    <script src="pdf.js"></script>
-    <script src="viewer.js"></script>
-  </head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PDF Viewer</title>
+  <link rel="stylesheet" href="viewer.css">
+  <script src="pdf.js"></script>
+  <script src="viewer.js"></script>
+</head>
+<body>
+  <!-- Judul PDF -->
+  <div id="pdfTitle" style="text-align:center; font-weight:bold; margin:10px 0;"></div>
 
-  <body>
-    <!-- Toolbar disembunyikan -->
-    <div id="toolbarViewer" class="toolbarHorizontalGroup" style="display:none;">
-        <div id="toolbarViewerLeft" class="toolbarHorizontalGroup"></div>
-        <div id="toolbarViewerMiddle" class="toolbarHorizontalGroup"></div>
-        <div id="toolbarViewerRight" class="toolbarHorizontalGroup"></div>
-    </div>
+  <!-- Toolbar disembunyikan -->
+  <div id="toolbarViewer" class="toolbarHorizontalGroup" style="display:none;">
+      <div id="toolbarViewerLeft" class="toolbarHorizontalGroup"></div>
+      <div id="toolbarViewerMiddle" class="toolbarHorizontalGroup"></div>
+      <div id="toolbarViewerRight" class="toolbarHorizontalGroup"></div>
+  </div>
 
-    <!-- Container PDF -->
-    <div id="viewerContainer" class="pdfViewerContainer">
-        <div id="viewer" class="pdfViewer"></div>
-    </div>
+  <!-- Container PDF -->
+  <div id="viewerContainer" class="pdfViewerContainer">
+    <div id="viewer" class="pdfViewer"></div>
+  </div>
 
-    <script>
-      // Load PDF dari folder pdf/
-      const DEFAULT_URL = "../pdf/Pharmacovigilance (1).pdf";
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const pdfFile = urlParams.get('file') || 'default.pdf'; // default jika tidak ada parameter
+    document.getElementById('pdfTitle').textContent = pdfFile;
 
-      const container = document.getElementById('viewerContainer');
-      const pdfjsLib = window['pdfjs-dist/build/pdf'];
-      pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdf.worker.js';
+    const pdfjsLib = window['pdfjs-dist/build/pdf'];
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdf.worker.js';
 
-      pdfjsLib.getDocument(DEFAULT_URL).promise.then(pdf => {
-        const viewer = document.getElementById('viewer');
-        for (let i = 1; i <= pdf.numPages; i++) {
-          pdf.getPage(i).then(page => {
-            const scale = 1.5;
-            const viewport = page.getViewport({scale: scale});
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-            viewer.appendChild(canvas);
+    pdfjsLib.getDocument('../pdf/' + pdfFile).promise.then(pdf => {
+      const viewer = document.getElementById('viewer');
+      for (let i = 1; i <= pdf.numPages; i++) {
+        pdf.getPage(i).then(page => {
+          const scale = 1.5;
+          const viewport = page.getViewport({scale: scale});
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d');
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+          viewer.appendChild(canvas);
 
-            page.render({
-              canvasContext: context,
-              viewport: viewport
-            });
+          page.render({
+            canvasContext: context,
+            viewport: viewport
           });
-        }
-      });
-    </script>
-  </body>
+        });
+      }
+    });
+  </script>
+</body>
 </html>
