@@ -4937,10 +4937,10 @@
   --sidebar-transition-duration:200ms;
   --sidebar-transition-timing-function:ease;
 
-  --toolbar-height:32px;
+  --toolbar-height:0px;
   --toolbar-horizontal-padding:1px;
   --toolbar-vertical-padding:2px;
-  --icon-size:16px;
+  --icon-size:0px;
 
   --toolbar-icon-opacity:0.7;
   --doorhanger-icon-opacity:0.9;
@@ -5248,11 +5248,11 @@
 }
 
 html[data-toolbar-density="compact"]{
-    --toolbar-height:30px;
+    --toolbar-height:0px;
   }
 
 html[data-toolbar-density="touch"]{
-    --toolbar-height:44px;
+    --toolbar-height:0px;
   }
 
 html,
