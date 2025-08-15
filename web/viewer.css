@@ -4937,10 +4937,10 @@
   --sidebar-transition-duration:200ms;
   --sidebar-transition-timing-function:ease;
 
-  --toolbar-height:0px;
+  --toolbar-height:32px;
   --toolbar-horizontal-padding:1px;
   --toolbar-vertical-padding:2px;
-  --icon-size:0px;
+  --icon-size:16px;
 
   --toolbar-icon-opacity:0.7;
   --doorhanger-icon-opacity:0.9;
@@ -5248,11 +5248,11 @@
 }
 
 html[data-toolbar-density="compact"]{
-    --toolbar-height:0px;
+    --toolbar-height:30px;
   }
 
 html[data-toolbar-density="touch"]{
-    --toolbar-height:0px;
+    --toolbar-height:44px;
   }
 
 html,
@@ -6764,31 +6764,3 @@ dialog :link{
     display:none;
   }
 }
-div.toolbar {
-  display: none;
-}
-#viewerContainer {
-  top: 0;
-}
-.pdfViewer .page {
-  margin: 0;
-  border: 0;
-  padding: 0;
-}
-#viewerContainer,
-#viewer {
-  overflow-y: hidden;
-}
-#toolbarContainer{
-  display: none;
-}
-.testttt {
-    height: 40px; /* Tinggi elemen 40px */
-    width: 200px; /* Lebar elemen 200px */
-    background-color: #323639; /* Warna latar belakang abu gelap */
-    position: absolute; /* Posisi absolut relatif ke parent yang posisinya relatif */
-    right: 0; /* Ditempatkan 0px dari sisi kanan parent */
-    top: 10px; /* Ditempatkan 10px dari atas parent */
-    z-index: 9999999999999999999999; /* Elemen ini akan berada di atas elemen lain */
-}
-
