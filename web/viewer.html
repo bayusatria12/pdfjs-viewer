@@ -2,38 +2,60 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>PDF Viewer</title>
-  <link rel="stylesheet" href="build/pdf.viewer.css"/>
+  <title>PDF.js Simple Viewer (No Toolbar)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    #toolbarViewerRight, 
-    #download,
-    #print {
-      display: none !important; /* Hilangkan tombol download & print */
-    }
     html, body {
       margin: 0;
+      padding: 0;
       height: 100%;
       overflow: hidden;
+      background: #000;
+    }
+    #viewerContainer {
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background: #333;
+    }
+    canvas {
+      display: block;
+      margin: auto;
     }
   </style>
 </head>
 <body>
-  <iframe 
-    id="pdfFrame" 
-    width="100%" 
-    height="100%" 
-    style="border:none;">
-  </iframe>
+  <div id="viewerContainer"></div>
 
+  <script src="pdf.js"></script>
   <script>
     const urlParams = new URLSearchParams(window.location.search);
-    const file = urlParams.get('file');
+    const pdfUrl = urlParams.get('file');
 
-    if (!file) {
-      document.body.innerHTML = "<h3>File PDF tidak ditemukan. Tambahkan ?file=URL_PDF</h3>";
+    if (!pdfUrl) {
+      document.body.innerHTML = "<h3 style='color:white;text-align:center;margin-top:50px;'>No PDF file specified.</h3>";
     } else {
-      document.getElementById("pdfFrame").src = 
-        `build/viewer.html?file=${encodeURIComponent(file)}`;
+      const container = document.getElementById('viewerContainer');
+
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdf.worker.js';
+
+      pdfjsLib.getDocument(pdfUrl).promise.then(function(pdf) {
+        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+          pdf.getPage(pageNum).then(function(page) {
+            const viewport = page.getViewport({ scale: 1.5 });
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            container.appendChild(canvas);
+
+            page.render({
+              canvasContext: context,
+              viewport: viewport
+            });
+          });
+        }
+      });
     }
   </script>
 </body>
