@@ -1,49 +1,40 @@
 <!DOCTYPE html>
-<html dir="ltr" mozdisallowselectionprint>
+<html>
 <head>
-  <meta charset="utf-8"/>
-  <title>Custom PDF Viewer</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="web/viewer.css"/>
-  <script src="build/pdf.js"></script>
-  <script src="web/viewer.js"></script>
+  <meta charset="utf-8">
+  <title>PDF Viewer</title>
+  <link rel="stylesheet" href="build/pdf.viewer.css"/>
   <style>
-    /* Hilangkan tombol download dan print */
+    #toolbarViewerRight, 
     #download,
     #print {
-      display: none !important;
+      display: none !important; /* Hilangkan tombol download & print */
+    }
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
     }
   </style>
 </head>
-
-<body tabindex="1" class="loadingInProgress">
-  <!-- HTML bawaan PDF.js viewer -->
-  <div id="outerContainer">
-    <!-- Konten viewer PDF.js -->
-    <div id="mainContainer">
-      <div id="viewerContainer" tabindex="0">
-        <div id="viewer" class="pdfViewer"></div>
-      </div>
-    </div>
-  </div>
+<body>
+  <iframe 
+    id="pdfFrame" 
+    width="100%" 
+    height="100%" 
+    style="border:none;">
+  </iframe>
 
   <script>
-    function getParameterByName(name, url) {
-      if (!url) url = window.location.href;
-      name = name.replace(/[\[\]]/g, "\\$&");
-      const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-            results = regex.exec(url);
-      if (!results) return null;
-      if (!results[2]) return '';
-      return decodeURIComponent(results[2].replace(/\+/g, " "));
-    }
+    const urlParams = new URLSearchParams(window.location.search);
+    const file = urlParams.get('file');
 
-    document.addEventListener('webviewerloaded', function() {
-      const fileUrl = getParameterByName('file');
-      if (fileUrl) {
-        PDFViewerApplication.open(fileUrl);
-      }
-    });
+    if (!file) {
+      document.body.innerHTML = "<h3>File PDF tidak ditemukan. Tambahkan ?file=URL_PDF</h3>";
+    } else {
+      document.getElementById("pdfFrame").src = 
+        `build/viewer.html?file=${encodeURIComponent(file)}`;
+    }
   </script>
 </body>
 </html>
