@@ -1,64 +1,49 @@
 <!DOCTYPE html>
 <html dir="ltr" mozdisallowselectionprint>
 <head>
-  <meta charset="utf-8">
-  <title>PDF.js Viewer (Mobile Friendly)</title>
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <link rel="stylesheet" href="viewer.css"/>
-  
+  <meta charset="utf-8"/>
+  <title>Custom PDF Viewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="web/viewer.css"/>
+  <script src="build/pdf.js"></script>
+  <script src="web/viewer.js"></script>
   <style>
-    /* Fullscreen untuk HP */
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-    }
-    #outerContainer {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-    }
-    #viewerContainer {
-      flex: 1;
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-    /* Sembunyikan tombol download & print bawaan PDF.js */
-    #download, .download,
-    #print, .print {
+    /* Hilangkan tombol download dan print */
+    #download,
+    #print {
       display: none !important;
     }
   </style>
-  
-  <script src="../build/pdf.js"></script>
-  <script src="../build/pdf.worker.js"></script>
 </head>
 
 <body tabindex="1" class="loadingInProgress">
+  <!-- HTML bawaan PDF.js viewer -->
   <div id="outerContainer">
-
-    <!-- Toolbar -->
-    <div id="toolbarContainer">
-      <div id="toolbarViewer">
-        <div id="toolbarViewerLeft">
-          <button id="previous" class="toolbarButton" title="Previous Page">◀</button>
-          <button id="next" class="toolbarButton" title="Next Page">▶</button>
-          <input type="number" id="pageNumber" class="toolbarField" value="1" size="4" min="1"/>
-          <span id="numPages">/ 1</span>
-        </div>
-        <!-- Toolbar kanan dikosongkan -->
-        <div id="toolbarViewerRight"></div>
+    <!-- Konten viewer PDF.js -->
+    <div id="mainContainer">
+      <div id="viewerContainer" tabindex="0">
+        <div id="viewer" class="pdfViewer"></div>
       </div>
-    </div>
-
-    <!-- PDF Viewer -->
-    <div id="viewerContainer">
-      <div id="viewer" class="pdfViewer"></div>
     </div>
   </div>
 
-  <script src="viewer.js"></script>
+  <script>
+    function getParameterByName(name, url) {
+      if (!url) url = window.location.href;
+      name = name.replace(/[\[\]]/g, "\\$&");
+      const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+    document.addEventListener('webviewerloaded', function() {
+      const fileUrl = getParameterByName('file');
+      if (fileUrl) {
+        PDFViewerApplication.open(fileUrl);
+      }
+    });
+  </script>
 </body>
 </html>
