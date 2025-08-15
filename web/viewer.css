@@ -6769,3 +6769,30 @@ dialog :link{
 #openFile {
   display: none !important;
 }
+/* Hilangkan tombol download, print, dan open file di semua ukuran */
+#toolbarContainer #download,
+#toolbarContainer #print,
+#toolbarContainer #openFile {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Pastikan halaman bisa di-scroll di HP */
+html, body {
+    overflow: auto !important;
+    height: auto !important;
+}
+
+/* Perbaiki scroll di viewer PDF */
+#viewerContainer {
+    overflow: auto !important;
+    -webkit-overflow-scrolling: touch !important; /* smooth scroll di iOS */
+}
+
+/* Kalau ada tombol download tersembunyi di dropdown menu */
+#secondaryToolbar #secondaryDownload,
+#secondaryToolbar #secondaryPrint,
+#secondaryToolbar #secondaryOpenFile {
+    display: none !important;
+    visibility: hidden !important;
+}
