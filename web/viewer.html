@@ -25,8 +25,9 @@
       overflow: auto;
       -webkit-overflow-scrolling: touch;
     }
-    /* Sembunyikan tombol download bawaan PDF.js */
-    #download, .download {
+    /* Sembunyikan tombol download & print bawaan PDF.js */
+    #download, .download,
+    #print, .print {
       display: none !important;
     }
   </style>
@@ -47,11 +48,8 @@
           <input type="number" id="pageNumber" class="toolbarField" value="1" size="4" min="1"/>
           <span id="numPages">/ 1</span>
         </div>
-
-        <div id="toolbarViewerRight">
-          <!-- Tombol print tetap ada -->
-          <button id="print" class="toolbarButton" title="Print">🖨</button>
-        </div>
+        <!-- Toolbar kanan dikosongkan -->
+        <div id="toolbarViewerRight"></div>
       </div>
     </div>
 
