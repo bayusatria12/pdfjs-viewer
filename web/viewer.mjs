@@ -3274,8 +3274,6 @@ class NewAltTextManager {
   #descriptionContainer;
   #dialog;
   #disclaimer;
-  #downloadModel;
-  #downloadModelDescription;
   #eventBus;
   #firstTime = false;
   #guessedAltText;
@@ -3299,13 +3297,10 @@ class NewAltTextManager {
     cancelButton,
     disclaimer,
     notNowButton,
-    saveButton,
     textarea,
     learnMore,
     errorCloseButton,
     createAutomaticallyButton,
-    downloadModel,
-    downloadModelDescription,
     title
   }, overlayManager, eventBus) {
     this.#cancelButton = cancelButton;
@@ -3318,8 +3313,6 @@ class NewAltTextManager {
     this.#textarea = textarea;
     this.#learnMore = learnMore;
     this.#title = title;
-    this.#downloadModel = downloadModel;
-    this.#downloadModelDescription = downloadModelDescription;
     this.#overlayManager = overlayManager;
     this.#eventBus = eventBus;
     dialog.addEventListener("close", this.#close.bind(this));
@@ -3330,7 +3323,6 @@ class NewAltTextManager {
     });
     cancelButton.addEventListener("click", this.#boundCancel);
     notNowButton.addEventListener("click", this.#boundCancel);
-    saveButton.addEventListener("click", this.#save.bind(this));
     errorCloseButton.addEventListener("click", () => {
       this.#toggleError(false);
     });
@@ -3661,7 +3653,6 @@ class NewAltTextManager {
 class ImageAltTextSettings {
   #aiModelSettings;
   #createModelButton;
-  #downloadModelButton;
   #dialog;
   #eventBus;
   #mlManager;
@@ -3714,7 +3705,6 @@ class ImageAltTextSettings {
       });
     });
     deleteModelButton.addEventListener("click", this.#delete.bind(this, true));
-    downloadModelButton.addEventListener("click", this.#download.bind(this, true));
     closeButton.addEventListener("click", this.#finish.bind(this));
     learnMore.addEventListener("click", () => {
       this.#reportTelemetry({
@@ -3820,7 +3810,6 @@ class AltTextManager {
   #optionDescription;
   #optionDecorative;
   #overlayManager;
-  #saveButton;
   #textarea;
   #uiManager;
   #previousAltText = null;
@@ -3835,7 +3824,6 @@ class AltTextManager {
     optionDecorative,
     textarea,
     cancelButton,
-    saveButton
   }, container, overlayManager, eventBus) {
     this.#dialog = dialog;
     this.#optionDescription = optionDescription;
