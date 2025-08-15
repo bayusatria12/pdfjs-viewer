@@ -4928,6 +4928,14 @@
   border:2px solid transparent;
 }
 
+/* Hide download, save, and print buttons */
+#download, 
+#secondaryDownload, 
+#print, 
+#secondaryPrint {
+  display: none !important;
+}
+
 :root{
   --dir-factor:1;
   --inline-start:left;
@@ -6226,11 +6234,11 @@ dialog :link{
           background-color:black;
         }
 
-:is(:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsToolbarContainer) .editorParamsSlider)::-webkit-slider-runnable-track,:is(:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsToolbarContainer) .editorParamsSlider)::-moz-range-track{
+:is(:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsSlider)::-webkit-slider-runnable-track,:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsSlider)::-moz-range-track{
           background-color:black;
         }
 
-:is(:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsToolbarContainer) .editorParamsSlider)::-webkit-slider-thumb,:is(:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsToolbarContainer) .editorParamsSlider)::-moz-range-thumb{
+:is(:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsSlider)::-webkit-slider-thumb,:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsSlider)::-moz-range-thumb{
           background-color:white;
         }
 
@@ -6763,77 +6771,4 @@ dialog :link{
   #scaleSelectContainer{
     display:none;
   }
-}
-#download,
-#print,
-#openFile {
-  display: none !important;
-}
-/* Hilangkan tombol download, print, dan open file di semua ukuran */
-#toolbarContainer #download,
-#toolbarContainer #print,
-#toolbarContainer #openFile {
-    display: none !important;
-    visibility: hidden !important;
-}
-
-/* Pastikan halaman bisa di-scroll di HP */
-html, body {
-    overflow: auto !important;
-    height: auto !important;
-}
-
-/* Perbaiki scroll di viewer PDF */
-#viewerContainer {
-    overflow: auto !important;
-    -webkit-overflow-scrolling: touch !important; /* smooth scroll di iOS */
-}
-
-/* Kalau ada tombol download tersembunyi di dropdown menu */
-#secondaryToolbar #secondaryDownload,
-#secondaryToolbar #secondaryPrint,
-#secondaryToolbar #secondaryOpenFile {
-    display: none !important;
-    visibility: hidden !important;
-}
-/* Hilangkan semua toolbar PDF.js */
-#toolbarContainer,
-#toolbarViewer,
-.toolbar,
-#secondaryToolbar,
-.secondaryToolbar,
-#loadingBar {
-    display: none !important;
-}
-
-/* Area PDF penuh tanpa toolbar */
-#viewerContainer {
-    top: 0 !important;
-    height: 100% !important;
-    overflow: auto !important; /* Scroll aktif di HP & desktop */
-}
-
-/* Supaya di mobile tetap responsif */
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow: hidden;
-}
-
-@media (max-width: 768px) {
-    #viewerContainer {
-        -webkit-overflow-scrolling: touch; /* Scroll halus di iOS */
-        padding: 0;
-    }
-}
-#toolbarContainer {
-  display: none !important;
-  visibility: hidden !important;
-}
-
-/* Ensure the viewer container takes full height */
-#viewerContainer {
-  top: 0 !important;
-  height: 100% !important;
 }
