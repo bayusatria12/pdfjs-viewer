@@ -6834,5 +6834,6 @@ html, body {
 
 /* Ensure the viewer container takes full height */
 #viewerContainer {
+  top: 0 !important;
   height: 100% !important;
 }
