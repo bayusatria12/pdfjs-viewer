@@ -6827,3 +6827,12 @@ html, body {
         padding: 0;
     }
 }
+#toolbarContainer {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* Ensure the viewer container takes full height */
+#viewerContainer {
+  height: 100% !important;
+}
