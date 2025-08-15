@@ -4928,14 +4928,6 @@
   border:2px solid transparent;
 }
 
-/* Hide download, save, and print buttons */
-#download, 
-#secondaryDownload, 
-#print, 
-#secondaryPrint {
-  display: none !important;
-}
-
 :root{
   --dir-factor:1;
   --inline-start:left;
@@ -6234,11 +6226,11 @@ dialog :link{
           background-color:black;
         }
 
-:is(:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsSlider)::-webkit-slider-runnable-track,:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsSlider)::-moz-range-track{
+:is(:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsToolbarContainer) .editorParamsSlider)::-webkit-slider-runnable-track,:is(:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsToolbarContainer) .editorParamsSlider)::-moz-range-track{
           background-color:black;
         }
 
-:is(:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsSlider)::-webkit-slider-thumb,:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsSlider)::-moz-range-thumb{
+:is(:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsToolbarContainer) .editorParamsSlider)::-webkit-slider-thumb,:is(:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsToolbarContainer) .editorParamsSlider)::-moz-range-thumb{
           background-color:white;
         }
 
@@ -6771,19 +6763,4 @@ dialog :link{
   #scaleSelectContainer{
     display:none;
   }
-}
-div.toolbar {
-  display: none;
-}
-#viewerContainer {
-  top: 0;
-}
-.pdfViewer .page {
-  margin: 0;
-  border: 0;
-  padding: 0;
-}
-#viewerContainer,
-#viewer {
-  overflow-y: hidden;
 }
