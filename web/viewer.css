@@ -6775,3 +6775,10 @@ div.toolbar {
   border: 0;
   padding: 0;
 }
+#viewerContainer,
+#viewer {
+  overflow-y: hidden;
+}
+#toolbarContainer{
+  display: none;
+}
