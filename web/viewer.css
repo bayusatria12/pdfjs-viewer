@@ -6764,6 +6764,8 @@ dialog :link{
     display:none;
   }
 }
-#download, #print, #openFile {
+#download,
+#print,
+#openFile {
   display: none !important;
 }
