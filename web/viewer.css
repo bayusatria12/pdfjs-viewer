@@ -6764,3 +6764,14 @@ dialog :link{
     display:none;
   }
 }
+div.toolbar {
+  display: none;
+}
+#viewerContainer {
+  top: 0;
+}
+.pdfViewer .page {
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
