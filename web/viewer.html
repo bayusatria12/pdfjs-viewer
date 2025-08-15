@@ -469,44 +469,7 @@ See https://github.com/adobe-type-tools/cmap-resources
 
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const file = urlParams.get("file");
+        const file = "sample.pdf"; // Replace with the path to your PDF file
         const fallbackMessage = document.querySelector(".fallbackMessage");
 
-        if (!file) {
-          fallbackMessage.hidden = false;
-          fallbackMessage.textContent = "No PDF file specified. Please provide a file path in the URL.";
-          return;
-        }
-
         const viewer = document.getElementById("viewer");
-        const pdfjsLib = window["pdfjs-dist/build/pdf"];
-        pdfjsLib.GlobalWorkerOptions.workerSrc = "../build/pdf.worker.js";
-
-        pdfjsLib.getDocument(file).promise
-          .then((pdf) => {
-            for (let i = 1; i <= pdf.numPages; i++) {
-              pdf.getPage(i).then((page) => {
-                const viewport = page.getViewport({ scale: 1 });
-                const canvas = document.createElement("canvas");
-                const context = canvas.getContext("2d");
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
-
-                viewer.appendChild(canvas);
-
-                page.render({
-                  canvasContext: context,
-                  viewport: viewport,
-                });
-              });
-            }
-          })
-          .catch((error) => {
-            fallbackMessage.hidden = false;
-            fallbackMessage.textContent = `Error loading PDF: ${error.message}`;
-          });
-      });
-    </script>
-  </body>
-</html>
