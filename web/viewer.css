@@ -6796,3 +6796,34 @@ html, body {
     display: none !important;
     visibility: hidden !important;
 }
+/* Hilangkan semua toolbar PDF.js */
+#toolbarContainer,
+#toolbarViewer,
+.toolbar,
+#secondaryToolbar,
+.secondaryToolbar,
+#loadingBar {
+    display: none !important;
+}
+
+/* Area PDF penuh tanpa toolbar */
+#viewerContainer {
+    top: 0 !important;
+    height: 100% !important;
+    overflow: auto !important; /* Scroll aktif di HP & desktop */
+}
+
+/* Supaya di mobile tetap responsif */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    #viewerContainer {
+        -webkit-overflow-scrolling: touch; /* Scroll halus di iOS */
+        padding: 0;
+    }
+}
