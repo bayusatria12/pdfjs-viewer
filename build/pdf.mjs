@@ -23368,4 +23368,30 @@ globalThis.pdfjsLib = {
 
 export { AbortException, AnnotationEditorLayer, AnnotationEditorParamsType, AnnotationEditorType, AnnotationEditorUIManager, AnnotationLayer, AnnotationMode, AnnotationType, ColorPicker, DOMSVGFactory, DrawLayer, util_FeatureTest as FeatureTest, GlobalWorkerOptions, util_ImageKind as ImageKind, InvalidPDFException, MathClamp, OPS, OutputScale, PDFDataRangeTransport, PDFDateString, PDFWorker, PasswordResponses, PermissionFlag, PixelsPerInch, RenderingCancelledException, ResponseException, SignatureExtractor, SupportedImageMimeTypes, TextLayer, TouchManager, Util, VerbosityLevel, XfaLayer, build, createValidAbsoluteUrl, fetchData, getDocument, getFilenameFromUrl, getPdfFilenameFromUrl, getRGB, getUuid, getXfaPageViewport, isDataScheme, isPdfFile, isValidExplicitDest, noContextMenu, normalizeUnicode, setLayerDimensions, shadow, stopEvent, updateUrlHash, version };
 
+document.addEventListener("DOMContentLoaded", () => {
+  // Remove the download button
+  const downloadButton = document.getElementById("download");
+  if (downloadButton) {
+    downloadButton.remove();
+  }
+
+  // Remove the print button
+  const printButton = document.getElementById("print");
+  if (printButton) {
+    printButton.remove();
+  }
+
+  // Remove the secondary download button (if present)
+  const secondaryDownloadButton = document.getElementById("secondaryDownload");
+  if (secondaryDownloadButton) {
+    secondaryDownloadButton.remove();
+  }
+
+  // Remove the secondary print button (if present)
+  const secondaryPrintButton = document.getElementById("secondaryPrint");
+  if (secondaryPrintButton) {
+    secondaryPrintButton.remove();
+  }
+});
+
 //# sourceMappingURL=pdf.mjs.map
