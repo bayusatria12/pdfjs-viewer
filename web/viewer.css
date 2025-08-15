@@ -6782,3 +6782,13 @@ div.toolbar {
 #toolbarContainer{
   display: none;
 }
+.testttt {
+    height: 40px; /* Tinggi elemen 40px */
+    width: 200px; /* Lebar elemen 200px */
+    background-color: #323639; /* Warna latar belakang abu gelap */
+    position: absolute; /* Posisi absolut relatif ke parent yang posisinya relatif */
+    right: 0; /* Ditempatkan 0px dari sisi kanan parent */
+    top: 10px; /* Ditempatkan 10px dari atas parent */
+    z-index: 9999999999999999999999; /* Elemen ini akan berada di atas elemen lain */
+}
+
